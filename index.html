@@ -3,57 +3,102 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI video cost index — list price per minute, with sources</title>
-<meta name="description" content="Thirteen AI video models, normalised to the cost of one minute of finished output. Every row links to the provider's published price.">
-<link rel="canonical" href="https://aiapi-pro.com/video-cost-2026">
+<title>AI video cost calculator — what a batch actually costs (2026)</title>
+<meta name="description" content="Enter clips, duration and retries: see what the batch costs across 13 AI video models at list price, cheapest first. No signup.">
+<link rel="canonical" href="https://vvvvking.github.io/novai-cost-index/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI video batch cost calculator">
+<meta property="og:description" content="Clips × seconds × retries → dollars, across 13 models. List prices with source links.">
+<meta property="og:image" content="https://aiapi-pro.com/og-cover.png">
 <style>
-:root{--bg:#fbfaf8;--ink:#16181d;--muted:#5c6470;--line:#e3e0da;--card:#fff}
+:root{--bg:#fbfaf8;--ink:#16181d;--muted:#5c6470;--line:#e3e0da;--accent:#b4442a;--card:#fff}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif}
-.wrap{max-width:880px;margin:0 auto;padding:48px 22px 80px}
-h1{font-size:clamp(28px,4.6vw,40px);line-height:1.15;letter-spacing:-.02em;margin:0 0 14px;font-weight:750}
-p.lede{font-size:17px;color:#33383f;max-width:62ch;margin:0 0 28px}
-table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:14.5px}
+.wrap{max-width:880px;margin:0 auto;padding:44px 22px 80px}
+h1{font-size:clamp(26px,4.4vw,38px);line-height:1.15;letter-spacing:-.02em;margin:0 0 12px;font-weight:750}
+p.lede{font-size:17px;color:#33383f;max-width:62ch;margin:0 0 26px}
+.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:22px}
+label{display:block;font-size:12px;font-weight:650;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+input{width:100%;font:inherit;font-size:19px;font-variant-numeric:tabular-nums;padding:9px 11px;border:1px solid var(--line);border-radius:8px}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:26px}
+.cell{background:var(--card);padding:15px 17px}
+.cell b{display:block;font-size:22px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.cell span{display:block;font-size:12px;color:var(--muted);margin-top:4px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14.5px}
 th,td{padding:10px 14px;border-bottom:1px solid var(--line);text-align:right}
-th{background:#f4f2ee;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+th{background:#f4f2ee;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
 th:first-child,td:first-child{text-align:left}
 tbody tr:last-child td{border-bottom:0}
 td.num{font-variant-numeric:tabular-nums}
+tr.pick td{background:#f0fdf4;font-weight:650;color:#14532d}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(180,68,42,.3)}
 .note{font-size:13px;color:var(--muted);margin-top:14px}
-a{color:#b4442a;text-decoration:none;border-bottom:1px solid rgba(180,68,42,.3)}
-a:hover{border-bottom-color:#b4442a}
-footer{margin-top:40px;border-top:1px solid var(--line);padding-top:16px;font-size:12.5px;color:var(--muted)}
+.cta{margin-top:34px;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:22px}
+.btn{display:inline-block;margin-top:10px;background:var(--ink);color:#fff;padding:11px 18px;border-radius:8px;font-weight:600;border:0}
+footer{margin-top:36px;border-top:1px solid var(--line);padding-top:16px;font-size:12.5px;color:var(--muted)}
+@media(max-width:680px){.controls,.summary{grid-template-columns:1fr}th,td{padding:9px 10px;font-size:13px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-<h1>What a minute of AI video costs</h1>
-<p class="lede">Thirteen video models, normalised to one unit: <strong>dollars per minute of finished output</strong>. Per-second rates are not comparable across providers because resolution and native audio change the tier.</p>
+<h1>What your AI video batch actually costs</h1>
+<p class="lede">Every model quotes a per-second rate at one resolution, with or without audio. This converts 13 models to one number: <strong>dollars for your batch</strong>, retries included.</p>
+
+<div class="controls">
+  <div><label for="clips">Finished clips</label><input id="clips" type="number" min="1" value="300"></div>
+  <div><label for="secs">Seconds each</label><input id="secs" type="number" min="1" value="8"></div>
+  <div><label for="takes">Takes per clip</label><input id="takes" type="number" min="1" step="0.5" value="2"></div>
+</div>
+
+<div class="summary">
+  <div class="cell"><b id="gen">—</b><span>generated seconds</span></div>
+  <div class="cell"><b id="lo">—</b><span>cheapest total</span></div>
+  <div class="cell"><b id="hi">—</b><span>most expensive</span></div>
+</div>
 
 <table>
-<thead><tr><th>Model</th><th>Resolution</th><th>Per second</th><th>1 minute</th><th>Source</th></tr></thead>
-<tbody>
-<tr><td>Kling 2.6</td><td>720p</td><td class="num">$0.042</td><td class="num"><strong>$2.52</strong></td><td><a href="https://kling.ai/document-api/pricing/base/video.md">Kling</a></td></tr>
-<tr><td>Wan 3</td><td>480p</td><td class="num">$0.050</td><td class="num">$3.00</td><td><a href="https://docs.dev.runwayml.com/guides/pricing.md">Runway</a></td></tr>
-<tr><td>Runway Gen-4 Turbo</td><td>—</td><td class="num">$0.050</td><td class="num">$3.00</td><td><a href="https://docs.dev.runwayml.com/guides/pricing.md">Runway</a></td></tr>
-<tr><td>Kling 3.0</td><td>720p</td><td class="num">$0.084</td><td class="num">$5.04</td><td><a href="https://kling.ai/document-api/pricing/base/video.md">Kling</a></td></tr>
-<tr><td>Hailuo 3</td><td>768p</td><td class="num">$0.100</td><td class="num">$6.00</td><td><a href="https://docs.dev.runwayml.com/guides/pricing.md">Runway</a></td></tr>
-<tr><td>Kling 3.0</td><td>1080p</td><td class="num">$0.112</td><td class="num">$6.72</td><td><a href="https://kling.ai/document-api/pricing/base/video.md">Kling</a></td></tr>
-<tr><td>Runway Gen-4.5</td><td>—</td><td class="num">$0.120</td><td class="num">$7.20</td><td><a href="https://docs.dev.runwayml.com/guides/pricing.md">Runway</a></td></tr>
-<tr><td>Kling 3.0 + audio</td><td>1080p</td><td class="num">$0.168</td><td class="num">$10.08</td><td><a href="https://kling.ai/document-api/pricing/base/video.md">Kling</a></td></tr>
-<tr><td>Veo 3.1</td><td>no audio</td><td class="num">$0.200</td><td class="num">$12.00</td><td><a href="https://docs.dev.runwayml.com/guides/pricing.md">Runway</a></td></tr>
-<tr><td>Seedance 2.5</td><td>720p</td><td class="num">$0.300</td><td class="num">$18.00</td><td><a href="https://docs.dev.runwayml.com/guides/pricing.md">Runway</a></td></tr>
-<tr><td>Veo 3.1</td><td>with audio</td><td class="num">$0.400</td><td class="num">$24.00</td><td><a href="https://docs.dev.runwayml.com/guides/pricing.md">Runway</a></td></tr>
-<tr><td>Kling 3.0</td><td>4K</td><td class="num">$0.420</td><td class="num">$25.20</td><td><a href="https://kling.ai/document-api/pricing/base/video.md">Kling</a></td></tr>
-<tr><td>Seedance 2.5</td><td>1080p</td><td class="num">$0.680</td><td class="num"><strong>$40.80</strong></td><td><a href="https://docs.dev.runwayml.com/guides/pricing.md">Runway</a></td></tr>
+<thead><tr><th>Model</th><th>Resolution</th><th>Per second</th><th>Total</th><th>Per minute</th></tr></thead>
+<tbody id="rows">
+<tr class="pick"><td>Kling 2.6</td><td>720p</td><td class="num">$0.042</td><td class="num">$202</td><td class="num">$2.52</td></tr>
+<tr><td>Wan 3</td><td>480p</td><td class="num">$0.050</td><td class="num">$240</td><td class="num">$3.00</td></tr>
+<tr><td>Runway Gen-4 Turbo</td><td>—</td><td class="num">$0.050</td><td class="num">$240</td><td class="num">$3.00</td></tr>
+<tr><td>Kling 3.0</td><td>720p</td><td class="num">$0.084</td><td class="num">$403</td><td class="num">$5.04</td></tr>
+<tr><td>Hailuo 3</td><td>768p</td><td class="num">$0.100</td><td class="num">$480</td><td class="num">$6.00</td></tr>
+<tr><td>Kling 3.0</td><td>1080p</td><td class="num">$0.112</td><td class="num">$538</td><td class="num">$6.72</td></tr>
+<tr><td>Runway Gen-4.5</td><td>—</td><td class="num">$0.120</td><td class="num">$576</td><td class="num">$7.20</td></tr>
+<tr><td>Kling 3.0 + audio</td><td>1080p</td><td class="num">$0.168</td><td class="num">$806</td><td class="num">$10.08</td></tr>
+<tr><td>Veo 3.1</td><td>no audio</td><td class="num">$0.200</td><td class="num">$960</td><td class="num">$12.00</td></tr>
+<tr><td>Seedance 2.5</td><td>720p</td><td class="num">$0.300</td><td class="num">$1,440</td><td class="num">$18.00</td></tr>
+<tr><td>Veo 3.1</td><td>with audio</td><td class="num">$0.400</td><td class="num">$1,920</td><td class="num">$24.00</td></tr>
+<tr><td>Kling 3.0</td><td>4K</td><td class="num">$0.420</td><td class="num">$2,016</td><td class="num">$25.20</td></tr>
+<tr><td>Seedance 2.5</td><td>1080p</td><td class="num">$0.680</td><td class="num">$3,264</td><td class="num">$40.80</td></tr>
 </tbody>
 </table>
 
-<p class="note">List prices, checked 2026-10-30. Rows sourced to Runway are the rates Runway publishes for those models; Kling rows are Kuaishou's own rates. These are one-take prices — at a typical 1-in-2 hit rate, double them.</p>
+<p class="note">List prices checked 2026-10-30. Runway rows are the prices Runway publishes for those resold models; Kling rows are Kuaishou's own rates. One-take prices — at a 1-in-2 hit rate, double them.</p>
 
-<p class="note">Maintained by <a href="https://aiapi-pro.com/?utm_source=github_pages&utm_medium=referral&utm_campaign=cost-index">NovAI</a>, an OpenAI-compatible gateway for Chinese models. Tools: <a href="https://aiapi-pro.com/video-cost-calculator">batch cost calculator</a> · <a href="https://aiapi-pro.com/image-cost-calculator">image cost calculator</a> · <a href="https://aiapi-pro.com/video-cost-2026">full sourced table</a>.</p>
-
-<footer>Model names and prices belong to their respective providers. This page carries no affiliate links.</footer>
+<div class="cta">
+  <strong>Run these models on one key.</strong>
+  <p style="margin:8px 0 0;color:#3a3f46">NovAI serves Chinese video, image and text models through one OpenAI-compatible API at provider list price, 0% platform fee. Free tier without a card.</p>
+  <a class="btn" href="https://aiapi-pro.com/free?utm_source=github_pages&utm_medium=referral&utm_campaign=cost-index">Get a free API key</a>
+  <a class="btn" href="https://aiapi-pro.com/video-cost-calculator?utm_source=github_pages&utm_medium=referral&utm_campaign=cost-index" style="background:#fff;color:#16181d;border:1px solid var(--line);margin-left:8px">Full calculator</a>
 </div>
+
+<footer>
+Model names and prices belong to their respective providers. Maintained by <a href="https://aiapi-pro.com/?utm_source=github_pages&utm_medium=referral">NovAI</a>. Sourced table: <a href="https://aiapi-pro.com/video-cost-2026">per-minute cost</a>.
+</footer>
+</div>
+<script>
+const M=[["Kling 2.6","720p",0.042],["Wan 3","480p",0.05],["Runway Gen-4 Turbo","—",0.05],["Kling 3.0","720p",0.084],["Hailuo 3","768p",0.1],["Kling 3.0","1080p",0.112],["Runway Gen-4.5","—",0.12],["Kling 3.0 + audio","1080p",0.168],["Veo 3.1","no audio",0.2],["Seedance 2.5","720p",0.3],["Veo 3.1","with audio",0.4],["Kling 3.0","4K",0.42],["Seedance 2.5","1080p",0.68]];
+const $=i=>document.getElementById(i);
+const usd=v=>"$"+Math.round(v).toLocaleString("en-US");
+const usd2=v=>"$"+v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+function r(){const c=Math.max(1,+$("clips").value||1),s=Math.max(1,+$("secs").value||1),t=Math.max(1,+$("takes").value||1);
+const g=c*s*t;$("gen").textContent=g.toLocaleString("en-US");
+const rows=M.map(([n,res,r])=>({n,res,r,tot:g*r,pm:r*60})).sort((a,b)=>a.tot-b.tot);
+$("lo").textContent=usd(rows[0].tot);$("hi").textContent=usd(rows[rows.length-1].tot);
+$("rows").innerHTML=rows.map((x,i)=>`<tr${i===0?' class="pick"':''}><td>${x.n}</td><td>${x.res}</td><td class="num">$${x.r.toFixed(3)}</td><td class="num">${usd(x.tot)}</td><td class="num">${usd2(x.pm)}</td></tr>`).join("");}
+["clips","secs","takes"].forEach(i=>$(i).addEventListener("input",r));r();
+</script>
 </body>
 </html>
