@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI video cost index — list price per minute, with sources</title>
+<meta name="description" content="Thirteen AI video models, normalised to the cost of one minute of finished output. Every row links to the provider's published price.">
+<link rel="canonical" href="https://aiapi-pro.com/video-cost-2026">
+<style>
+:root{--bg:#fbfaf8;--ink:#16181d;--muted:#5c6470;--line:#e3e0da;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:880px;margin:0 auto;padding:48px 22px 80px}
+h1{font-size:clamp(28px,4.6vw,40px);line-height:1.15;letter-spacing:-.02em;margin:0 0 14px;font-weight:750}
+p.lede{font-size:17px;color:#33383f;max-width:62ch;margin:0 0 28px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:14.5px}
+th,td{padding:10px 14px;border-bottom:1px solid var(--line);text-align:right}
+th{background:#f4f2ee;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+th:first-child,td:first-child{text-align:left}
+tbody tr:last-child td{border-bottom:0}
+td.num{font-variant-numeric:tabular-nums}
+.note{font-size:13px;color:var(--muted);margin-top:14px}
+a{color:#b4442a;text-decoration:none;border-bottom:1px solid rgba(180,68,42,.3)}
+a:hover{border-bottom-color:#b4442a}
+footer{margin-top:40px;border-top:1px solid var(--line);padding-top:16px;font-size:12.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>What a minute of AI video costs</h1>
+<p class="lede">Thirteen video models, normalised to one unit: <strong>dollars per minute of finished output</strong>. Per-second rates are not comparable across providers because resolution and native audio change the tier.</p>
+
+<table>
+<thead><tr><th>Model</th><th>Resolution</th><th>Per second</th><th>1 minute</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>Kling 2.6</td><td>720p</td><td class="num">$0.042</td><td class="num"><strong>$2.52</strong></td><td><a href="https://kling.ai/document-api/pricing/base/video.md">Kling</a></td></tr>
+<tr><td>Wan 3</td><td>480p</td><td class="num">$0.050</td><td class="num">$3.00</td><td><a href="https://docs.dev.runwayml.com/guides/pricing.md">Runway</a></td></tr>
+<tr><td>Runway Gen-4 Turbo</td><td>—</td><td class="num">$0.050</td><td class="num">$3.00</td><td><a href="https://docs.dev.runwayml.com/guides/pricing.md">Runway</a></td></tr>
+<tr><td>Kling 3.0</td><td>720p</td><td class="num">$0.084</td><td class="num">$5.04</td><td><a href="https://kling.ai/document-api/pricing/base/video.md">Kling</a></td></tr>
+<tr><td>Hailuo 3</td><td>768p</td><td class="num">$0.100</td><td class="num">$6.00</td><td><a href="https://docs.dev.runwayml.com/guides/pricing.md">Runway</a></td></tr>
+<tr><td>Kling 3.0</td><td>1080p</td><td class="num">$0.112</td><td class="num">$6.72</td><td><a href="https://kling.ai/document-api/pricing/base/video.md">Kling</a></td></tr>
+<tr><td>Runway Gen-4.5</td><td>—</td><td class="num">$0.120</td><td class="num">$7.20</td><td><a href="https://docs.dev.runwayml.com/guides/pricing.md">Runway</a></td></tr>
+<tr><td>Kling 3.0 + audio</td><td>1080p</td><td class="num">$0.168</td><td class="num">$10.08</td><td><a href="https://kling.ai/document-api/pricing/base/video.md">Kling</a></td></tr>
+<tr><td>Veo 3.1</td><td>no audio</td><td class="num">$0.200</td><td class="num">$12.00</td><td><a href="https://docs.dev.runwayml.com/guides/pricing.md">Runway</a></td></tr>
+<tr><td>Seedance 2.5</td><td>720p</td><td class="num">$0.300</td><td class="num">$18.00</td><td><a href="https://docs.dev.runwayml.com/guides/pricing.md">Runway</a></td></tr>
+<tr><td>Veo 3.1</td><td>with audio</td><td class="num">$0.400</td><td class="num">$24.00</td><td><a href="https://docs.dev.runwayml.com/guides/pricing.md">Runway</a></td></tr>
+<tr><td>Kling 3.0</td><td>4K</td><td class="num">$0.420</td><td class="num">$25.20</td><td><a href="https://kling.ai/document-api/pricing/base/video.md">Kling</a></td></tr>
+<tr><td>Seedance 2.5</td><td>1080p</td><td class="num">$0.680</td><td class="num"><strong>$40.80</strong></td><td><a href="https://docs.dev.runwayml.com/guides/pricing.md">Runway</a></td></tr>
+</tbody>
+</table>
+
+<p class="note">List prices, checked 2026-10-30. Rows sourced to Runway are the rates Runway publishes for those models; Kling rows are Kuaishou's own rates. These are one-take prices — at a typical 1-in-2 hit rate, double them.</p>
+
+<p class="note">Maintained by <a href="https://aiapi-pro.com/?utm_source=github_pages&utm_medium=referral&utm_campaign=cost-index">NovAI</a>, an OpenAI-compatible gateway for Chinese models. Tools: <a href="https://aiapi-pro.com/video-cost-calculator">batch cost calculator</a> · <a href="https://aiapi-pro.com/image-cost-calculator">image cost calculator</a> · <a href="https://aiapi-pro.com/video-cost-2026">full sourced table</a>.</p>
+
+<footer>Model names and prices belong to their respective providers. This page carries no affiliate links.</footer>
+</div>
+</body>
+</html>
