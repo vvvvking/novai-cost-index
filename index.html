@@ -102,5 +102,9 @@ $("lo").textContent=usd(rows[0].tot);$("hi").textContent=usd(rows[rows.length-1]
 $("rows").innerHTML=rows.map((x,i)=>`<tr${i===0?' class="pick"':''}><td>${x.n}</td><td>${x.res}</td><td class="num">$${x.r.toFixed(3)}</td><td class="num">${usd(x.tot)}</td><td class="num">${usd2(x.pm)}</td></tr>`).join("");}
 ["clips","secs","takes"].forEach(i=>$(i).addEventListener("input",r));r();
 </script>
+<p style="margin-top:18px">
+  <a href="https://aiapi-pro.com/chinese-ai-api-pricing"><img src="https://aiapi-pro.com/badge/deepseek-v4-pro.svg?v=2" alt="Chinese AI API prices" height="28"></a>
+  <span style="font-size:13px;color:#64748b">&larr; live price badge, any of the 111 models: <a href="https://aiapi-pro.com/badge">/badge</a></span>
+</p>
 </body>
 </html>
